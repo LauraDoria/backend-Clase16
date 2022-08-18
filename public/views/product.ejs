@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- fuente para titulos, menu, botones y links -->
+        <link rel="stylesheet" href="https://use.typekit.net/ltv7aza.css">
+        <!-- fuente para textos -->
+        <link rel="stylesheet" href="https://use.typekit.net/qqp3hjl.css">
+        <!-- Archivo CSS -->
+        <link rel="../style.css">
+        <title>Product Page</title>
+    </head>
+    <body>
+        <main className='itemDetailContainer'>
+            <%- include('./partials/navbar.ejs'); %>
+            <div className='navigateGallery'>
+                <a className='navigateGalleryButton' href="/products">Volver a Productos</a>
+                <a className='navigateGalleryButton' href="/cart/:id">Ir al Carrito</a>
+            </div>
+            <article className='itemDetailOuterContainer'>
+                <div className='itemDetailContainerShadow'>
+                    <div className='itemDetailImage'>
+                        <img src="<%-detailThumbnail%>" alt="<%-name%>"></img>
+                        <div className='inCartButtons'>
+                            <form action="/cart/:id" method="post">
+                                <input type="submit" value="<%-id%>">Agregar al carrito</input>
+                            </form>
+                            <a href='/cart/:id' className='addToCartProductDetailButton'>Ir al carrito</a>
+                        </div>
+                    </div>
+                    <div className='itemDetailDetailContainer'>
+                        <div className='itemDetailDetail'>
+                            <h1 className='itemDetailDetailTitle'><%-name%></h1>
+                            <p className='itemDetailDetailSubtitle'> <%-name%> | $ <%-price%></p>
+                            <h2 className='itemDetailDetailSubtitle'>Detalle del producto</h2>
+                            <p className='itemDetailDetailTipoProducto'><%-description%></p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <%- include('./partials/footer.ejs'); %>
+        </main>
+    </body>
+</html>
