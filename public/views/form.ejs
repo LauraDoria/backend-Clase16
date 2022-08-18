@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- fuente para titulos, menu, botones y links -->
+        <link rel="stylesheet" href="https://use.typekit.net/ltv7aza.css">
+        <!-- fuente para textos -->
+        <link rel="stylesheet" href="https://use.typekit.net/qqp3hjl.css">
+        <!-- Archivo CSS -->
+        <link rel="../style.css">
+        <title>Product Form</title>
+    </head>
+    <body>
+        <main className='formOuterContainer'>
+            <%- include('./partials/navbar.ejs'); %>
+            <div className='inCartButtons'>
+                <button className='addToCartProductDetailButton' onclick="formType = '<%-new%>'">Cargar Producto</button>
+                <button className='addToCartProductDetailButton' onclick="formType = '<%-modify%>'">Modificar Producto</button>
+                <button className='addToCartProductDetailButton' onclick="formType = '<%-delete%>'">Eliminar Producto</button>
+            </div>
+            <% if (formType == 'new') { %>
+                <form className='clientForm' action="/form" method="post">
+                    <h2 className='clientFormTitle'>* Cargar un producto *</h2>
+                    <hr className='ruler'>
+                    <p className='clientFormInputTitle'>Nombre del producto:</p>
+                    <input className='clientFormInput' name="productName" type="text" placeholder="Nombre del producto">
+                    <p className='clientFormInputTitle'>Código del producto:</p>
+                    <input className='clientFormInput' name="productCode" type="text" placeholder="Código del producto">
+                    <p className='clientFormInputTitle'>Stock:</p>
+                    <input className='clientFormInput' name="productStock" type="number" placeholder="Unidades disponibles">
+                    <p className='clientFormInputTitle'>Precio unitario:</p>
+                    <input className='clientFormInput' name="productPrice" type="number" placeholder="Precio unitario">
+                    <p className='clientFormInputTitle'>Tipo de producto:</p>
+                    <select className='clientFormInput' name="productType" type="select" placeholder="Selecciona">
+                        <option value="productoCapilar">Producto Capilar</option>
+                        <option value="productoFacial">Producto Facial</option>
+                        <option value="productoCorporal">Producto Corporal</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Tipo de piel:</p>
+                    <select className='clientFormInput' name="productSkinType" type="select" placeholder="Selecciona">
+                        <option value="grasa">Grasa</option>
+                        <option value="seca">Seca</option>
+                        <option value="sensible">Sensible</option>
+                        <option value="madura">Madura</option>
+                        <option value="todos">Todos</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Tipo de cabello:</p>
+                    <select className='clientFormInput' name="productHairType" type="select" placeholder="Selecciona">
+                        <option value="graso">Graso</option>
+                        <option value="seco">Seco</option>
+                        <option value="todos">Todos</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Uso:</p>
+                    <select className='clientFormInput' name="productFunction" type="select" placeholder="Selecciona">
+                        <option value="limpieza">Limpieza</option>
+                        <option value="nutrición">Nutrición</option> 
+                        <option value="hidratación">Hidratación</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Zero Waste:</p>
+                    <select className='clientFormInput' name="productZeroWaste" type="select" placeholder="Selecciona">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>         
+                    </select>
+                    <p className='clientFormInputTitle'>Formato de presentación:</p>
+                    <input className='clientFormInput' name="productPresentation" type="text" placeholder="Presentación">
+                    <p className='clientFormInputTitle'>Agrega una descripción (máx. 360 carácteres):</p>
+                    <input className='clientFormInput' name="productDescription" type="text" placeholder="Descripción">
+                    <p className='clientFormInputTitle'>Modo de uso (máx. 360 carácteres):</p>
+                    <input className='clientFormInput' name="productInstructions" type="text" placeholder="Modo de uso">
+                    <p className='clientFormInputTitle'>Formulación (máx. 550 carácteres):</p>
+                    <input className='clientFormInput' name="productInci" type="text" placeholder="Formulación">
+                    <p className='clientFormInputTitle'>Imagen galería:</p>
+                    <input className='clientFormInput' name="productThumbnail" type="text" placeholder="Carga tu imagen">
+                    <p className='clientFormInputTitle'>Imagen detalle:</p>
+                    <input className='clientFormInput' name="productThumbnailBig" type="text" placeholder="Carga tu imagen">
+                    <input className='clientFormButton' type="submit">
+                </form>
+            <%} else if (formType == 'modify') { %>
+                <form className='clientForm' action="/form" method="put">
+                    <h2 className='clientFormTitle'>* Modificar un producto *</h2>
+                    <hr className='ruler' />
+                    <hr className='ruler'>
+                    <p className='clientFormInputTitle'>Nombre del producto:</p>
+                    <input className='clientFormInput' name="productName" type="text" placeholder="Nombre del producto">
+                    <p className='clientFormInputTitle'>Código del producto:</p>
+                    <input className='clientFormInput' name="productCode" type="text" placeholder="Código del producto">
+                    <p className='clientFormInputTitle'>Stock:</p>
+                    <input className='clientFormInput' name="productStock" type="number" placeholder="Unidades disponibles">
+                    <p className='clientFormInputTitle'>Precio unitario:</p>
+                    <input className='clientFormInput' name="productPrice" type="number" placeholder="Precio unitario">
+                    <p className='clientFormInputTitle'>Tipo de producto:</p>
+                    <select className='clientFormInput' name="productType" type="select" placeholder="Selecciona">
+                        <option value="productoCapilar">Producto Capilar</option>
+                        <option value="productoFacial">Producto Facial</option>
+                        <option value="productoCorporal">Producto Corporal</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Tipo de piel:</p>
+                    <select className='clientFormInput' name="productSkinType" type="select" placeholder="Selecciona">
+                        <option value="grasa">Grasa</option>
+                        <option value="seca">Seca</option>
+                        <option value="sensible">Sensible</option>
+                        <option value="madura">Madura</option>
+                        <option value="todos">Todos</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Tipo de cabello:</p>
+                    <select className='clientFormInput' name="productHairType" type="select" placeholder="Selecciona">
+                        <option value="graso">Graso</option>
+                        <option value="seco">Seco</option>
+                        <option value="todos">Todos</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Uso:</p>
+                    <select className='clientFormInput' name="productFunction" type="select" placeholder="Selecciona">
+                        <option value="limpieza">Limpieza</option>
+                        <option value="nutrición">Nutrición</option> 
+                        <option value="hidratación">Hidratación</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                    <p className='clientFormInputTitle'>Zero Waste:</p>
+                    <select className='clientFormInput' name="productZeroWaste" type="select" placeholder="Selecciona">
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>         
+                    </select>
+                    <p className='clientFormInputTitle'>Formato de presentación:</p>
+                    <input className='clientFormInput' name="productPresentation" type="text" placeholder="Presentación">
+                    <p className='clientFormInputTitle'>Agrega una descripción (máx. 360 carácteres):</p>
+                    <input className='clientFormInput' name="productDescription" type="text" placeholder="Descripción">
+                    <p className='clientFormInputTitle'>Modo de uso (máx. 360 carácteres):</p>
+                    <input className='clientFormInput' name="productInstructions" type="text" placeholder="Modo de uso">
+                    <p className='clientFormInputTitle'>Formulación (máx. 550 carácteres):</p>
+                    <input className='clientFormInput' name="productInci" type="text" placeholder="Formulación">
+                    <p className='clientFormInputTitle'>Imagen galería:</p>
+                    <input className='clientFormInput' name="productThumbnail" type="text" placeholder="Carga tu imagen">
+                    <p className='clientFormInputTitle'>Imagen detalle:</p>
+                    <input className='clientFormInput' name="productThumbnailBig" type="text" placeholder="Carga tu imagen">
+                    <input className='clientFormButton' type="submit">
+                </form>
+            <%} else { %>
+                <form className='clientForm' action="/form" method="delete">
+                    <h2 className='clientFormTitle'>* Eliminar un producto *</h2>
+                    <hr className='ruler' />
+                    <p className='clientFormInputTitle'>Ingrese número de "id" del producto:</p>
+                    <input className='clientFormInput' name="id" type="number" placeholder="Número de id del producto">
+                    <input className='clientFormButton' type="submit">
+                </form>  
+            <% } %>
+            <p className='clientFormInputTitle'>{{message}}</p>
+            <%- include('./partials/footer.ejs'); %>
+        </main>
+    </body>
+</html>

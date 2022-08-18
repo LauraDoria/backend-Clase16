@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- fuente para titulos, menu, botones y links -->
+        <link rel="stylesheet" href="https://use.typekit.net/ltv7aza.css">
+        <!-- fuente para textos -->
+        <link rel="stylesheet" href="https://use.typekit.net/qqp3hjl.css">
+        <!-- Archivo CSS -->
+        <link rel="../style.css">
+        <title>Cart</title>
+    </head>
+    <body>
+        <main className="cartContainer">
+            <%- include('./partials/navbar.ejs'); %>
+            <% if (quantity === 0) { %>
+                <div className='cart'>
+                    <h1 className='cartTitle'>* Tu Carrito *</h1>
+                    <div className='emptyCartContainer'>
+                        <h2 className='emptyCartTitle'>Tu Carrito está vacío!</h2>
+                        <img src='../images/music-toggle-play-to-pause.svg' alt='imagen logo' />
+                        <a className='cartButtonTwo' href='/products'>Volver a Productos</a>
+                    </div> 
+                </div>
+            <%} else { %>
+                <div className='cart'>
+                    <h1 className='cartTitle'>* Tu Carrito *</h1>
+                    <ul className='cartRows'>
+                        <% cart.forEach(product => { %>
+                            <li className='itemCard'>
+                                <div className="cartRow">
+                                    <div className="cartRowCategories">
+                                        <div className="cartValueContainer"><h3 className="cartText subtitle">Producto</h3></div>
+                                        <div className="cartValueContainer"><h3 className="cartText subtitle">Cantidad</h3></div>
+                                        <div className="cartValueContainer"><h3 className="cartText subtitle">Subtotal</h3></div>
+                                        <div className="cartValueContainer"></div>
+                                    </div>
+                                    <hr className="cartRowRuler" />
+                                    <div className="cartRowValues">
+                                        <div className="cartValueContainer"><p className="cartText value"><%=product.name%> | <%=product.presentation%></p></div>
+                                        <div className="cartValueContainer"><p className="cartText value">1</p></div>
+                                        <div className="cartValueContainer"><p className="cartText value">$<%=product.price%></p></div>
+                                        <div className="cartValueContainer"><input type="button" value="X" className="cartRowButton" /></div>
+                                    </div>        
+                                </div>
+                                <form action="/cart/:id" method="delete">
+                                    <input type="submit" value="<%=product.id%>">X</input>
+                                </form>
+                            </li>
+                        <% }); %>
+                        <div className='cartTotal'>
+                            <div className='cartTotalContainer'>
+                                <div className='cartTotalItem itemUno'><h3 className='cartTotalTitle'>Total Unidades</h3></div>
+                                <div className='cartTotalItem itemDos'><h3 className='cartTotalTitle'>Total</h3></div>
+                            </div>
+                            <hr className='cartRuler' />
+                            <div className='cartTotalContainer'>
+                                <div className='cartTotalItem itemUno'><p className='cartTotalValue'>Total Unidades</p></div>
+                                <div className='cartTotalItem itemDos'><p className='cartTotalValue'>$XXX</p></div>
+                            </div>
+                        </div>
+                        <button className='cartButtonTwo'>Vaciar Carrito</button>
+                    </ul>
+                </div>
+            <% } %>
+            <%- include('./partials/footer.ejs'); %>
+        </main>
+    </body>
+</html>

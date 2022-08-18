@@ -1,0 +1,17 @@
+<nav className='navBar'>
+    <div className='logoMenu'>
+        <a href='/home'>
+            <img src='../../images/music-toggle-pause-to-play.svg' alt='imagen logo' className='logoMenuImg imageOne'/>
+            <img src='../../images/music-toggle-play-to-pause.svg' alt='imagen logo' className='logoMenuImg imageTwo'/>
+        </a>
+        <a href='/home' className='logoMenuBrandName'>RÄW</a>
+    </div>
+    <a href="/products" className='menuItem'>Productos</a>
+    <a href="/cart" className='menuItem'>Carrito</a>
+    <a className='menuItem' href="/cart">
+        <div className='cartWidget'>
+            <img src='../../images/shopping-cart-icon.png' alt='imagen cart' className='cartWidgetImg'/>
+            <p className='cartWidgetQuantity'>{{productQuantity}}</p>
+        </div>
+    </a>
+</nav>
