@@ -1,0 +1,951 @@
+//Conexión con mongoDB.
+
+PS C:\Users\pc\Documents\Digital\ProgramasCursos\Coderhouse\Backend\claseOnce> mongo
+MongoDB shell version v5.0.11
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("9bb770dd-fb52-4b33-8d1c-202014ce921e") }
+MongoDB server version: 5.0.11
+================
+Warning: the "mongo" shell has been superseded by "mongosh",
+which delivers improved usability and compatibility.The "mongo" shell has been deprecated and will be removed in
+an upcoming release.
+For installation instructions, see
+https://docs.mongodb.com/mongodb-shell/install/
+================
+---
+The server generated these startup warnings when booting:
+guration is unrestricted                                                                                                      guration is unrestricted   
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> db
+test
+
+//Crear nuevo usuario administrador.
+
+> db.createUser({
+...     user: "Laura",
+...     pwd: "123backend",
+...     roles: ["readWrite", "dbAdmin"]
+... })
+Successfully added user: { "user" : "Laura", "roles" : [ "readWrite", "dbAdmin" ] }
+
+//Crear y moverse a base de datos 'eCommerceBackendLauraDoria'.
+
+> use eCommerceBackendLauraDoria
+switched to db eCommerceBackendLauraDoria
+
+//Crear y mostrar colecciones dentro de 'eCommerceBackendLauraDoria'.
+
+> db.createCollection('productsRaw')
+{ "ok" : 1 }
+> db.createCollection('shoppingCarts')
+{ "ok" : 1 }
+> db.createCollection('chatHistory')
+{ "ok" : 1 }
+> show collections
+chatHistory
+productsRaw
+shoppingCarts
+
+//1- Agregar 10 documentos a las colecciones de productos y de chat.
+//2- Claves de los documentos definidas según el esquema usado en mariaDB.
+
+> db.productsRaw.insertOne({
+...     "displayOrder": 1,
+...     "productCode": "3kFG8BWsTw",
+...     "stock": 20,
+...     "name": "Shampoo Sólido Cabello Graso",
+...     "productType": "productoCapilar",
+...     "skinType": "no disponible",
+...     "hairType": "graso",
+...     "function": "limpieza",
+...     "zeroWaste": "SI",
+...     "price": 450,
+...     "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.     "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt... })
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("6306c4bfb493ca8f3b3bdf3d")
+}
+> db.productsRaw.insertMany([{
+...         "displayOrder": 2,
+...         "productCode": "LTnyn3CToZ",
+...         "stock": 20,
+...         "name": "Shampoo Sólido Cabello Seco", 
+...         "productType": "productoCapilar",
+...         "skinType": "no disponible",
+...         "hairType": "seco",
+...         "function": "limpieza",
+...         "zeroWaste": "SI",
+...         "price": 450,
+...         "inci": "SCI (Sodium Cocoyl Isethionate), Hidrolato de Rosas (Rosa Damascena Flower Water), Aceite de Almendras Dulces (Prunus Amygdalus Dulcis Oil), Manteca de Karité (Butyrospermum Parkii Butter), Elastina Hidrolizada (Hydrolized Elastin, Phenoxyethanol / Ethylhexylglycerin), Proteína de Seda Hidrolizada (Hydrolized Silk Protein, Phenoxyethanol / Ethylhexylglycerin), Geogard®221 (Dehydroacetic Acid, Benzyl Alcohol), Vitamina E (Tocopherol Acetate), AE de Ylang Ylang (Cananga Odorata Oil), Esencia de Sándalo."roacetic Acid, Benzyl Alcohol), Vitamina E (Tocopherol Acetate), AE de Ylang Ylang (Cananga Odorata Oi...     },
+...     {
+...         "displayOrder": 3,
+...         "productCode": "PnPYi9dFYm",
+...         "stock": 20,
+...         "name": "Acondicionador Sólido para Todo Tipo de Cabello",
+...         "productType": "productoCapilar",
+...         "skinType": "no disponible",
+...         "hairType": "todos",
+...         "function": "limpieza",
+...         "zeroWaste": "SI",
+...         "price": 500,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 4,
+...         "productCode": "RzA437Z23R",
+...         "stock": 15,
+...         "name": "Aceite Capilar de Jojoba", 
+...         "productType": "productoCapilar", 
+...         "skinType": "no disponible", 
+...         "hairType": "graso",
+...         "function": "nutrición", 
+...         "zeroWaste": "NO",
+...         "price": 700,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 5,
+...         "productCode": "acbZ5iyULk",
+...         "stock": 15,
+...         "name": "Aceite Capilar de Almendras Dulces",
+...         "productType": "productoCapilar",
+...         "skinType": "no disponible",
+...         "hairType": "todos",
+...         "function": "nutrición",
+...         "zeroWaste": "NO",
+...         "price": 500,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 6,
+...         "productCode": "mBwmCKYqbY",
+...         "stock": 15,
+...         "name": "Blend de Aceites Capilares Palta y Coco",
+...         "productType": "productoCapilar",
+...         "skinType": "no disponible",
+...         "hairType": "seco",
+...         "function": "nutrición",
+...         "zeroWaste": "NO",
+...         "price": 600,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 7,
+...         "productCode": "tMgUvwAqEf",
+...         "stock": 15,
+...         "name": "Blend de Aceites para el Cabello",
+...         "productType": "productoCapilar",
+...         "skinType": "no disponible",
+...         "hairType": "todos",
+...         "function": "nutrición",
+...         "zeroWaste": "NO",
+...         "price": 700,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 8,
+...         "productCode": "4xxbHggYDC",
+...         "stock": 20,
+...         "name": "Limpiador Facial Sólido Pieles Grasas",
+...         "productType": "productoFacial",
+...         "skinType": "grasa",
+...         "hairType": "no disponible",
+...         "function": "limpieza",
+...         "zeroWaste": "SI",
+...         "price": 400,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     },
+...     {
+...         "displayOrder": 9,
+...         "productCode": "LfVaebZkGD",
+...         "stock": 20,
+...         "name": "Limpiador Facial Sólido Pieles Secas",
+...         "productType": "productoFacial",
+...         "skinType": "seca",
+...         "hairType": "no disponible",
+...         "function": "limpieza",
+...         "zeroWaste": "SI",
+...         "price": 400,
+...         "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tinci...     }])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("6306c6a9b493ca8f3b3bdf3e"),
+                ObjectId("6306c6a9b493ca8f3b3bdf3f"),
+                ObjectId("6306c6a9b493ca8f3b3bdf40"),
+                ObjectId("6306c6a9b493ca8f3b3bdf41"),
+                ObjectId("6306c6a9b493ca8f3b3bdf42"),
+                ObjectId("6306c6a9b493ca8f3b3bdf43"),
+                ObjectId("6306c6a9b493ca8f3b3bdf44"),
+                ObjectId("6306c6a9b493ca8f3b3bdf45")
+        ]
+}
+> db.chatHistory.insertMany([{
+...         "user": "Laura",
+...         "message": "Hola!",
+...         "date": "24/8/2022, 7:10:06 PM"
+...     },
+...     {
+...         "user": "Pepe",
+...         "message": "Holaaa",
+...         "date": "24/8/2022, 7:10:32 PM"
+...     },
+...     {
+...         "user": "Juan",
+...         "message": "Cómo están?",
+...         "date": "24/8/2022, 7:11:14 PM"
+...     },
+...     {
+...         "user": "Ana",
+...         "message": "holaa",
+...         "date": "24/8/2022, 7:13:32 PM"
+...     },
+...     {
+...         "user": "Ana",
+...         "message": "qué tal?",
+...         "date": "24/8/2022, 7:13:40 PM"
+...     },
+...     {
+...         "user": "Juan",
+...         "message": "Bien bien",
+...         "date": "24/8/2022, 7:13:51 PM"
+...     },
+...     {
+...         "user": "Laura",
+...         "message": "bieen",
+...         "date": "24/8/2022, 7:14:23 PM"
+...     },
+...     {
+...         "user": "Pepe",
+...         "message": "pregunta",
+...         "date": "24/8/2022, 7:14:27 PM"
+...     },
+...     {
+...         "user": "Pepe",
+...         "message": "alguno pudo resolver el desafío que era para hoy?",
+...         "date": "24/8/2022, 7:14:35 PM"
+...     },
+...     {
+...         "user": "Ana",
+...         "message": "ya te paso",
+...         "date": "24/8/2022, 7:15:32 PM"
+... }])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("6306d4e5b493ca8f3b3bdf46"),
+                ObjectId("6306d4e5b493ca8f3b3bdf47"),
+                ObjectId("6306d4e5b493ca8f3b3bdf48"),
+                ObjectId("6306d4e5b493ca8f3b3bdf49"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4a"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4b"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4c"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4d"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4e"),
+                ObjectId("6306d4e5b493ca8f3b3bdf4f")
+        ]
+}
+
+//3- Mostrar todos los documentos en las colecciones de productos y de chat.
+
+> db.productsRaw.find().pretty()
+{
+        "_id" : ObjectId("6306c4bfb493ca8f3b3bdf3d"),
+        "displayOrder" : 1,
+        "productCode" : "3kFG8BWsTw",
+        "stock" : 20,
+        "name" : "Shampoo Sólido Cabello Graso",     
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "graso",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 450,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/shampoo-solido-cabello-graso",
+        "detailThumbnail" : "../../Images/shampoo-solido-graso-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3e"),
+        "displayOrder" : 2,
+        "productCode" : "LTnyn3CToZ",
+        "stock" : 20,
+        "name" : "Shampoo Sólido Cabello Seco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 450,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/shampoo-solido-cabello-seco",
+        "detailThumbnail" : "../../Images/shampoo-solido-seco-grande",
+        "description" : "Si tu pelo tiene tendencia a ser muy seco, quebradizo o con frizz o si fue sometido a tratamientos agresivos como tinturas, decoloraciones o uso constante de la planchita, nuestro shampoo con aceite de almendras dulces, formulado con mayor porcentaje de aceite y agregado de elastina ayudará a mantenerlo fuerte e hidratado. Con aroma a jazmín, rosas y 
+benjuí.",
+        "instructions" : "Frotá la pastilla entre tus manos o sobre el cabello mojado hasta generar la cantidad de espuma deseada. Masajeá el cuero cabelludo durante algunos minutos y luego enjuagá. Si tu cabello es muy seco, dejar algo de producto ayudará a mantenerlo hidratado. No olvides colocar el shampoo en un lugar seco después de usarlo para maximizar su duración.",   
+        "inci" : "SCI (Sodium Cocoyl Isethionate), Hidrolato de Rosas (Rosa Damascena Flower Water), Aceite de Almendras Dulces (Prunus Amygdalus Dulcis Oil), Manteca de Karité (Butyrospermum Parkii Butter), Elastina Hidrolizada (Hydrolized Elastin, Phenoxyethanol / Ethylhexylglycerin), Proteína de Seda Hidrolizada (Hydrolized Silk Protein, Phenoxyethanol / Ethylhexylglycerin), Geogard®221 (Dehydroacetic Acid, Benzyl Alcohol), Vitamina E (Tocopherol Acetate), AE de Ylang Ylang (Cananga Odorata Oil), Esencia de Sándalo."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3f"),
+        "displayOrder" : 3,
+        "productCode" : "PnPYi9dFYm",
+        "stock" : 20,
+        "name" : "Acondicionador Sólido para Todo Tipo de Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 500,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/acondicionador-solido-todo-tipo-cabello",
+        "detailThumbnail" : "../../Images/acondicionador-solido-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf40"),
+        "displayOrder" : 4,
+        "productCode" : "RzA437Z23R",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Jojoba",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "graso",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-jojoba",
+        "detailThumbnail" : "../../Images/aceite-jojoba-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf41"),
+        "displayOrder" : 5,
+        "productCode" : "acbZ5iyULk",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Almendras Dulces",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 500,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-almendras-dulces",
+        "detailThumbnail" : "../../Images/aceite-almendras-dulces-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf42"),
+        "displayOrder" : 6,
+        "productCode" : "mBwmCKYqbY",
+        "stock" : 15,
+        "name" : "Blend de Aceites Capilares Palta y Coco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 600,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-palta-coco",
+        "detailThumbnail" : "../../Images/aceite-palta-coco-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf43"),
+        "displayOrder" : 7,
+        "productCode" : "tMgUvwAqEf",
+        "stock" : 15,
+        "name" : "Blend de Aceites para el Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/blend-aceite-capilar",
+        "detailThumbnail" : "../../Images/blend-aceites-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf44"),
+        "displayOrder" : 8,
+        "productCode" : "4xxbHggYDC",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Grasas",
+        "productType" : "productoFacial",
+        "skinType" : "grasa",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-grasa",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-grasas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf45"),
+        "displayOrder" : 9,
+        "productCode" : "LfVaebZkGD",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Secas",
+        "productType" : "productoFacial",
+        "skinType" : "seca",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-seca",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-secas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+> db.chatHistory.find().pretty()
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf46"),
+        "user" : "Laura",
+        "message" : "Hola!",
+        "date" : "24/8/2022, 7:10:06 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf47"),
+        "user" : "Pepe",
+        "message" : "Holaaa",
+        "date" : "24/8/2022, 7:10:32 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf48"),
+        "user" : "Juan",
+        "message" : "Cómo están?",
+        "date" : "24/8/2022, 7:11:14 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf49"),
+        "user" : "Ana",
+        "message" : "holaa",
+        "date" : "24/8/2022, 7:13:32 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4a"),
+        "user" : "Ana",
+        "message" : "qué tal?",
+        "date" : "24/8/2022, 7:13:40 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4b"),
+        "user" : "Juan",
+        "message" : "Bien bien",
+        "date" : "24/8/2022, 7:13:51 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4c"),
+        "user" : "Laura",
+        "message" : "bieen",
+        "date" : "24/8/2022, 7:14:23 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4d"),
+        "user" : "Pepe",
+        "message" : "pregunta",
+        "date" : "24/8/2022, 7:14:27 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4e"),
+        "user" : "Pepe",
+        "message" : "alguno pudo resolver el desafío que era para hoy?",
+        "date" : "24/8/2022, 7:14:35 PM"
+}
+{
+        "_id" : ObjectId("6306d4e5b493ca8f3b3bdf4f"),
+        "user" : "Ana",
+        "message" : "ya te paso",
+        "date" : "24/8/2022, 7:15:32 PM"
+}
+
+//4- Contar cantidad de documentos en colecciones de prouctos y de chat.
+
+> db.productsRaw.estimatedDocumentCount()
+9
+> db.chatHistory.estimatedDocumentCount()
+10
+
+//5- CRUD en la colección de productos.
+
+//a) Agregar un producto más a la colección.
+
+> db.productsRaw.insertOne({
+...     "displayOrder": 10,
+...     "productCode": "QQHnatDcZf",
+...     "stock": 20,
+...     "name": "Limpiador Facial Sólido Pieles Sensibles",
+...     "productType": "productoFacial",
+...     "skinType": "sensible",
+...     "hairType": "no disponible",
+...     "function": "limpieza",
+...     "zeroWaste": "SI",
+...     "price": 400,
+...     "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.     "inci": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt... })
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("6306d95db493ca8f3b3bdf50")
+}
+
+//b.1) Consulta de producto por nombre.
+
+> db.productsRaw.find({name: "Shampoo Sólido Cabello Seco"}).pretty()
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3e"),
+        "id" : 2,
+        "productCode" : "LTnyn3CToZ",
+        "stock" : 20,
+        "name" : "Shampoo Sólido Cabello Seco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 450,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/shampoo-solido-cabello-seco",
+        "detailThumbnail" : "../../Images/shampoo-solido-seco-grande",
+        "description" : "Si tu pelo tiene tendencia a ser muy seco, quebradizo o con frizz o si fue sometido a tratamientos agresivos como tinturas, decoloraciones o uso constante de la planchita, nuestro shampoo con aceite de almendras dulces, formulado con mayor porcentaje de aceite y agregado de elastina ayudará a mantenerlo fuerte e hidratado. Con aroma a jazmín, rosas y 
+benjuí.",
+        "instructions" : "Frotá la pastilla entre tus manos o sobre el cabello mojado hasta generar la cantidad de espuma deseada. Masajeá el cuero cabelludo durante algunos minutos y luego enjuagá. Si tu cabello es muy seco, dejar algo de producto ayudará a mantenerlo hidratado. No olvides colocar el shampoo en un lugar seco después de usarlo para maximizar su duración.",   
+        "inci" : "SCI (Sodium Cocoyl Isethionate), Hidrolato de Rosas (Rosa Damascena Flower Water), Aceite de Almendras Dulces (Prunus Amygdalus Dulcis Oil), Manteca de Karité (Butyrospermum Parkii Butter), Elastina Hidrolizada (Hydrolized Elastin, Phenoxyethanol / Ethylhexylglycerin), Proteína de Seda Hidrolizada (Hydrolized Silk Protein, Phenoxyethanol / Ethylhexylglycerin), Geogard®221 (Dehydroacetic Acid, Benzyl Alcohol), Vitamina E (Tocopherol Acetate), AE de Ylang Ylang (Cananga Odorata Oil), Esencia de Sándalo."
+}
+
+//b.2) Consulta de producto por precio menor o igual a $700.
+
+> db.productsRaw.find({price: {$lte: 700}}).sort({price: 1}).pretty()
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf44"),
+        "id" : 8,
+        "productCode" : "4xxbHggYDC",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Grasas",
+        "productType" : "productoFacial",
+        "skinType" : "grasa",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-grasa",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-grasas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf45"),
+        "id" : 9,
+        "productCode" : "LfVaebZkGD",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Secas",
+        "productType" : "productoFacial",
+        "skinType" : "seca",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-seca",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-secas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306d95db493ca8f3b3bdf50"),
+        "displayOrder" : 10,
+        "productCode" : "QQHnatDcZf",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Sensibles",
+        "productType" : "productoFacial",
+        "skinType" : "sensible",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-sensible",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-sensibles-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c4bfb493ca8f3b3bdf3d"),
+        "displayOrder" : 1,
+        "productCode" : "3kFG8BWsTw",
+        "stock" : 20,
+        "name" : "Shampoo Sólido Cabello Graso",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "graso",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 450,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/shampoo-solido-cabello-graso",
+        "detailThumbnail" : "../../Images/shampoo-solido-graso-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3e"),
+        "id" : 2,
+        "productCode" : "LTnyn3CToZ",
+        "stock" : 20,
+        "name" : "Shampoo Sólido Cabello Seco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 450,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/shampoo-solido-cabello-seco",
+        "detailThumbnail" : "../../Images/shampoo-solido-seco-grande",
+        "description" : "Si tu pelo tiene tendencia a ser muy seco, quebradizo o con frizz o si fue sometido a tratamientos agresivos como tinturas, decoloraciones o uso constante de la planchita, nuestro shampoo con aceite de almendras dulces, formulado con mayor porcentaje de aceite y agregado de elastina ayudará a mantenerlo fuerte e hidratado. Con aroma a jazmín, rosas y 
+benjuí.",
+        "instructions" : "Frotá la pastilla entre tus manos o sobre el cabello mojado hasta generar la cantidad de espuma deseada. Masajeá el cuero cabelludo durante algunos minutos y luego enjuagá. Si tu cabello es muy seco, dejar algo de producto ayudará a mantenerlo hidratado. No olvides colocar el shampoo en un lugar seco después de usarlo para maximizar su duración.",   
+        "inci" : "SCI (Sodium Cocoyl Isethionate), Hidrolato de Rosas (Rosa Damascena Flower Water), Aceite de Almendras Dulces (Prunus Amygdalus Dulcis Oil), Manteca de Karité (Butyrospermum Parkii Butter), Elastina Hidrolizada (Hydrolized Elastin, Phenoxyethanol / Ethylhexylglycerin), Proteína de Seda Hidrolizada (Hydrolized Silk Protein, Phenoxyethanol / Ethylhexylglycerin), Geogard®221 (Dehydroacetic Acid, Benzyl Alcohol), Vitamina E (Tocopherol Acetate), AE de Ylang Ylang (Cananga Odorata Oil), Esencia de Sándalo."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3f"),
+        "id" : 3,
+        "productCode" : "PnPYi9dFYm",
+        "stock" : 20,
+        "name" : "Acondicionador Sólido para Todo Tipo de Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 500,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/acondicionador-solido-todo-tipo-cabello",
+        "detailThumbnail" : "../../Images/acondicionador-solido-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf41"),
+        "id" : 5,
+        "productCode" : "acbZ5iyULk",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Almendras Dulces",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 500,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-almendras-dulces",
+        "detailThumbnail" : "../../Images/aceite-almendras-dulces-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf42"),
+        "id" : 6,
+        "productCode" : "mBwmCKYqbY",
+        "stock" : 15,
+        "name" : "Blend de Aceites Capilares Palta y Coco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 600,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-palta-coco",
+        "detailThumbnail" : "../../Images/aceite-palta-coco-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf40"),
+        "id" : 4,
+        "productCode" : "RzA437Z23R",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Jojoba",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "graso",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-jojoba",
+        "detailThumbnail" : "../../Images/aceite-jojoba-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf43"),
+        "id" : 7,
+        "productCode" : "tMgUvwAqEf",
+        "stock" : 15,
+        "name" : "Blend de Aceites para el Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/blend-aceite-capilar",
+        "detailThumbnail" : "../../Images/blend-aceites-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+
+//b.3) Consulta de producto por precios entre $400 y $500.
+
+> db.productsRaw.find({price: {$in: [400, 500]}}).sort({price: 1}).pretty()
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf44"),
+        "id" : 8,
+        "productCode" : "4xxbHggYDC",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Grasas",
+        "productType" : "productoFacial",
+        "skinType" : "grasa",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-grasa",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-grasas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf45"),
+        "id" : 9,
+        "productCode" : "LfVaebZkGD",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Secas",
+        "productType" : "productoFacial",
+        "skinType" : "seca",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-seca",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-secas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306d95db493ca8f3b3bdf50"),
+        "displayOrder" : 10,
+        "productCode" : "QQHnatDcZf",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Sensibles",
+        "productType" : "productoFacial",
+        "skinType" : "sensible",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-sensible",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-sensibles-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf3f"),
+        "id" : 3,
+        "productCode" : "PnPYi9dFYm",
+        "stock" : 20,
+        "name" : "Acondicionador Sólido para Todo Tipo de Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 500,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/acondicionador-solido-todo-tipo-cabello",
+        "detailThumbnail" : "../../Images/acondicionador-solido-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf41"),
+        "id" : 5,
+        "productCode" : "acbZ5iyULk",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Almendras Dulces",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 500,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-almendras-dulces",
+        "detailThumbnail" : "../../Images/aceite-almendras-dulces-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+
+//b.4) Consulta de producto por precios mayores a $500.
+
+> db.productsRaw.find({price: {$gt: 500}}).sort({price: 1}).pretty()
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf42"),
+        "id" : 6,
+        "productCode" : "mBwmCKYqbY",
+        "stock" : 15,
+        "name" : "Blend de Aceites Capilares Palta y Coco",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "seco",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 600,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-palta-coco",
+        "detailThumbnail" : "../../Images/aceite-palta-coco-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf40"),
+        "id" : 4,
+        "productCode" : "RzA437Z23R",
+        "stock" : 15,
+        "name" : "Aceite Capilar de Jojoba",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "graso",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/aceite-capilar-jojoba",
+        "detailThumbnail" : "../../Images/aceite-jojoba-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf43"),
+        "id" : 7,
+        "productCode" : "tMgUvwAqEf",
+        "stock" : 15,
+        "name" : "Blend de Aceites para el Cabello",
+        "productType" : "productoCapilar",
+        "skinType" : "no disponible",
+        "hairType" : "todos",
+        "function" : "nutrición",
+        "zeroWaste" : "NO",
+        "price" : 700,
+        "presentation" : "60ml",
+        "thumbnail" : "../../Images/blend-aceite-capilar",
+        "detailThumbnail" : "../../Images/blend-aceites-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+
+//b.5) Consulta por el tercer producto más barato.
+
+> db.productsRaw.find().sort({price: 1}).skip(2).limit(1).pretty()
+{
+        "_id" : ObjectId("6306c6a9b493ca8f3b3bdf44"),
+        "id" : 8,
+        "productCode" : "4xxbHggYDC",
+        "stock" : 20,
+        "name" : "Limpiador Facial Sólido Pieles Grasas",
+        "productType" : "productoFacial",
+        "skinType" : "grasa",
+        "hairType" : "no disponible",
+        "function" : "limpieza",
+        "zeroWaste" : "SI",
+        "price" : 400,
+        "presentation" : "50gr",
+        "thumbnail" : "../../Images/limpiador-facial-solido-piel-grasa",
+        "detailThumbnail" : "../../Images/limpiador-facial-solido-pieles-grasas-grande",
+        "description" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqu eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.",
+        "instructions" : "Lorem ipsum dolor sit amet, consectetue adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputa.",   
+        "inci" : "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+}
+
+//c) Modificar stock de productos con precio menor o igual a $500.
+
+> db.productsRaw.updateMany({price: {$lte: 500}}, {$set: {stock: 50}})
+{ "acknowledged" : true, "matchedCount" : 7, "modifiedCount" : 7 }
+
+//d) Modificar stock de productos con precio mayor a $600.
+
+> db.productsRaw.updateMany({price: {$gt: 600}}, {$set: {stock: 0}})
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+
+//e) Eliminar productos con precio menor a $500.
+
+> db.productsRaw.deleteMany({price: {$lt: 500}})
+{ "acknowledged" : true, "deletedCount" : 5 }
+
+> db.createUser({
+...     user: "Pepe",
+...     pwd: "consigna6",
+...     roles: [{role: "read", db: "eCommerceBackendLauraDoria"}]
+... })
+Successfully added user: {
+        "user" : "Pepe",
+        "roles" : [
+                {
+                        "role" : "read",
+                        "db" : "eCommerceBackendLauraDoria"
+                }
+        ]
+}
+
+
